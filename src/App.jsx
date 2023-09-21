@@ -1,11 +1,9 @@
-import { useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import "./App.css";
-
-function Hello() {
-  return <></>;
-}
+import Hello from "./Hello";
 
 function App() {
+  const [name, setName] = useState("John")
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("");
@@ -33,6 +31,7 @@ function App() {
   return (
     <div>
       <div>
+        <Hello name={name}/>
         <p>User Info</p>
         <form action="" onSubmit={logUserInfo}>
           <input
@@ -56,7 +55,7 @@ function App() {
             placeholder="Input Gender"
           />
           <br />
-          <button type="submit">Submit</button>
+          <Button name={"Submit"} type={"submit"}/>
         </form>
       </div>
       <UserInfo firstName={firstName} lastName={lastName} gender={gender} />
@@ -80,3 +79,13 @@ function UserInfo({ firstName, lastName, gender }) {
     </div>
   );
 }
+
+function Button({name, type}){
+  // const {name, type} = props
+  // const name = props.name
+  // const type = props.type;
+  return <button type={
+    type
+  }>{name}</button>
+}
+
