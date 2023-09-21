@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 
@@ -10,7 +10,10 @@ renders the text "Hello your_name"
  a component, which might plane
  HTML or JSX.
 
-* 2.  
+* 2. Instead of using a static name
+value for the name prop, use a
+controled value instead. 
+Hint: Use a state.
 
 */ 
 
@@ -19,9 +22,10 @@ function Hello({name}){
 }
 
 function App() {
+  const [myName, setMyName] = useState("Jane")
 
   return (
-   <Hello name="John">
+   <Hello name={myName}>
    </Hello>
   );
 }
