@@ -1,6 +1,10 @@
 import { useState } from "react";
 import "./App.css";
 
+function Hello() {
+  return <></>;
+}
+
 function App() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -21,10 +25,10 @@ function App() {
     setGender(e.target.value);
   };
 
-  const logUserInfo = e => {
-    e.preventDefault()
-    console.log(userInfo)
-  }
+  const logUserInfo = (e) => {
+    e.preventDefault();
+    console.log(userInfo);
+  };
 
   return (
     <div>
@@ -55,14 +59,7 @@ function App() {
           <button type="submit">Submit</button>
         </form>
       </div>
-      <div>
-        <p>User Info: </p>
-        <div>
-          <p>First Name: {firstName}</p>
-          <p>Last Name: {lastName}</p>
-          <p>Gender: {gender}</p>
-        </div>
-      </div>
+      <UserInfo firstName={firstName} lastName={lastName} gender={gender} />
     </div>
   );
 }
@@ -70,3 +67,16 @@ function App() {
 export default App;
 
 // Object Oriented Programming Overview.
+
+function UserInfo({ firstName, lastName, gender }) {
+  return (
+    <div>
+      <p>User Info: </p>
+      <div>
+        <p>First Name: {firstName}</p>
+        <p>Last Name: {lastName}</p>
+        <p>Gender: {gender}</p>
+      </div>
+    </div>
+  );
+}
