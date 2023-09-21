@@ -3,25 +3,18 @@ import "./App.css";
 import Hello from "./Hello";
 
 function App() {
-  const [name, setName] = useState("John")
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [gender, setGender] = useState("");
+  const [name, setName] = useState("John");
   const [userInfo, setUserInfo] = useState({
     firstName: "",
     lastName: "",
     gender: "",
   });
 
-  const handleFirstName = (e) => {
-    setFirstName(e.target.value);
-  };
-  const handleLastName = (e) => {
-    setLastName(e.target.value);
-  };
-  const handleGender = (e) => {
-    setGender(e.target.value);
-  };
+  const handleUserInfoChange = (event) =>
+    setUserInfo((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
 
   const logUserInfo = (e) => {
     e.preventDefault();
@@ -31,41 +24,46 @@ function App() {
   return (
     <div>
       <div>
-        <Hello name={name}/>
+        <Hello name={name} />
         <p>User Info</p>
         <form action="" onSubmit={logUserInfo}>
           <input
-            onChange={handleFirstName}
-            value={firstName}
+            onChange={handleUserInfoChange}
+            value={userInfo.firstName}
             type="text"
+            name="firstName"
             placeholder="Input First name"
           />
           <br />
           <input
-            onChange={handleLastName}
-            value={lastName}
+            onChange={handleUserInfoChange}
+            value={userInfo.lastName}
             type="text"
+            name="lastName"
             placeholder="Input Last name"
           />
           <br />
           <input
-            onChange={handleGender}
-            value={gender}
+            onChange={handleUserInfoChange}
+            value={userInfo.gender}
             type="text"
+            name="gender"
             placeholder="Input Gender"
           />
           <br />
-          <Button name={"Submit"} type={"submit"}/>
+          <Button name={"Submit"} type={"submit"} />
         </form>
       </div>
-      <UserInfo firstName={firstName} lastName={lastName} gender={gender} />
+      <UserInfo
+        firstName={userInfo.firstName}
+        lastName={userInfo.lastName}
+        gender={userInfo.gender}
+      />
     </div>
   );
 }
 
 export default App;
-
-// Object Oriented Programming Overview.
 
 function UserInfo({ firstName, lastName, gender }) {
   return (
@@ -80,12 +78,9 @@ function UserInfo({ firstName, lastName, gender }) {
   );
 }
 
-function Button({name, type}){
+function Button({ name, type }) {
   // const {name, type} = props
   // const name = props.name
   // const type = props.type;
-  return <button type={
-    type
-  }>{name}</button>
+  return <button type={type}>{name}</button>;
 }
-
