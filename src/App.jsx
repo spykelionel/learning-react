@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 
@@ -15,6 +15,10 @@ value for the name prop, use a
 controled value instead. 
 Hint: Use a state.
 
+* 3. Create a button that handles
+a click event. This button should 
+console.log(myName).
+
 */ 
 
 function Hello({name}){
@@ -22,12 +26,28 @@ function Hello({name}){
 }
 
 function App() {
-  const [myName, setMyName] = useState("Jane")
+  const [myName] = useState("Jane")
+  const [conditionalClass, setConditionalClass] = useState(false)
 
+useEffect(function(){
+  if(myName){
+    setConditionalClass(true)
+  } else {
+    setConditionalClass(false)
+  }
+}, [myName])
+
+  // function function_to_handle_click;
   return (
-   <Hello name={myName}>
-   </Hello>
+   <div className={`${(conditionalClass && 'present') || (!conditionalClass && "absent")}`}>
+    <Hello name={myName} />
+    <button 
+      >
+        Click Me!
+    </button>
+   </div>
   );
 }
+
 
 export default App;
