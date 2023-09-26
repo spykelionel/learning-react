@@ -45,43 +45,22 @@ const Header = ({ children }) => {
 };
 
 const Body = () => {
-  const [nameObject, setNameObject] = useState({id:0, name: "John"});
-  const [index, setIndex] = useState(0);
-  const [names] = useState([
-    {
-      id: 0,
-      name: "A",
-    },
-    {
-      id: 1,
-      name: "B",
-    },
-    {
-      id: 2,
-      name: "C",
-    },
-  ]);
+  const [name, setName] = useState("Name")
+  // useEffect(()=>{
+  //   console.log(name)
 
+  // })
+  // // useEffect(()=>{
+  // //   console.log(name)
+  // // }, [name])
+  // // useEffect(()=>{}, [])
   return (
     <section className={styles.section}>
-      <p>Name: {nameObject.name}, ID: {nameObject.id}</p>
-      <button
-        onClick={() => {
-          if (index <= names.length) {
-            setIndex(index + 1);
-            setNameObject(names[index]);
-          }
-        }}
-      >
-        Change name
-      </button>
-      
-      <p>All students</p>
-      <div>
-        {names.map((n,index)=>(
-          <div>{n.id} - {n.name}</div>
-          ))}
-      </div>
+     <h1>Events </h1>
+     <input onChange={(event)=>{
+      const {value} = event.target
+      setName(value)
+     }} type="text" value={name}/>
     </section>
   );
 };
