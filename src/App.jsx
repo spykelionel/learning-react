@@ -5,7 +5,7 @@ import styles from "./App.module.css";
 * Exercises
 * 1. Write a Hello component that 
 renders the text "Hello your_name"
- - Every componenet returns
+ - Every React componenet returns
  a component, which might be plane
  HTML or JSX.
 
@@ -18,12 +18,23 @@ Hint: Use a state.
 a click event. This button should 
 console.log(myName).
 
+1.
+<button onClick={()=>{
+console.log(myName)
+}}>Print my name</button>
+
+2.
+<button onClick={function(){
+console.log(myName)
+}}>Print my name</button>
+
 - react,
 DOM, virtual DOM, 
 component,
 props, 
 states, 
-events, 
+events,
+handling inputs,
 Effects,
 List rendering,
 conditional rendering,
@@ -31,23 +42,19 @@ conditional rendering,
  - memo
 */
 
-// function Hello(props) {
-  // const name =  props.name
-//   return <h1>Hello {name}</h1>;
-// }
-
-// function Hello(props) {
-  // const {name} =  props
-//   return <h1>Hello {name}</h1>;
-// }
-
-// function Hello({name}) {
+// function Hello({ name }) {
 //   return <h1>Hello {name}</h1>;
 // }
 
 const Header = ({ children }) => {
+  // const children = props.children
+  // const {children} = props
+  let childrenCopy = children
+  // console.log(Object.is(children, childrenCopy))
   return (
-    <header className={styles.header}>
+    <header onClick={()=>{
+      console.log("YOu clicked the header")
+    }} className={styles.header}>
       <p>Header</p>
       {children}
     </header>
@@ -55,17 +62,35 @@ const Header = ({ children }) => {
 };
 
 const Body = () => {
-  const [name, setName] = useState(null)
+  const [name, setName] = useState("Name");
+  const [person, setPerson] = useState({
+    age: 29,
+    name: "",
+    color: "",
+    height: "",
+    gender: "",
+  });
+
+  // useEffect(()=>{
+  //   console.log(name)
+
+  // })
+  // // useEffect(()=>{
+  // //   console.log(name)
+  // // }, [name])
+  // // useEffect(()=>{}, [])
   return (
     <section className={styles.section}>
-     <h1>Name: {
-     name?name:"No name"
-}
-</h1>
-     <input onChange={(event)=>{
-      const {value} = event.target
-      setName(value)
-     }} type="text" value={name}/>
+      <h1>Events </h1>
+      <input
+        onChange={(event) => {
+        //  const value = event.target.value
+        const {value} = event.target
+          setName(event.target.value);
+        }}
+        type="text"
+        value={name}
+      />
     </section>
   );
 };
@@ -79,10 +104,11 @@ const Footer = () => {
 };
 
 function App() {
+  const [myName, setMyName] = useState("Initial name");
   return (
     <>
       <Header>
-        <p>This is the header</p>
+        <>This is the header</>
       </Header>
       <Body />
       <Footer />
