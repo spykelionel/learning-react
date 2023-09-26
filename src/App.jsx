@@ -31,7 +31,17 @@ conditional rendering,
  - memo
 */
 
-// function Hello({ name }) {
+// function Hello(props) {
+  // const name =  props.name
+//   return <h1>Hello {name}</h1>;
+// }
+
+// function Hello(props) {
+  // const {name} =  props
+//   return <h1>Hello {name}</h1>;
+// }
+
+// function Hello({name}) {
 //   return <h1>Hello {name}</h1>;
 // }
 
@@ -45,18 +55,13 @@ const Header = ({ children }) => {
 };
 
 const Body = () => {
-  const [name, setName] = useState("Name")
-  // useEffect(()=>{
-  //   console.log(name)
-
-  // })
-  // // useEffect(()=>{
-  // //   console.log(name)
-  // // }, [name])
-  // // useEffect(()=>{}, [])
+  const [name, setName] = useState(null)
   return (
     <section className={styles.section}>
-     <h1>Events </h1>
+     <h1>Name: {
+     name?name:"No name"
+}
+</h1>
      <input onChange={(event)=>{
       const {value} = event.target
       setName(value)
