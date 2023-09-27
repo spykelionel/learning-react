@@ -1,54 +1,56 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState } from "react";
 import "./App.css";
 
+
+let todo = {
+  id: Date.now(),
+  text: "Take a bath1",
+  isCompleted: false,
+}
+
 function App() {
-  const [todos, setTodos] = useState([
-    {
-      id: Date.now(),
-      text: "Take a bath1",
-      isCompleted: false,
-    },
-    // {
-    //   id: 1,
-    //   text: "Take a bath2",
-    //   isCompleted: false,
-    // },
-    // {
-    //   id: 2,
-    //   text: "Take a bath3",
-    //   isCompleted: false,
-    // },
-    // {
-    //   id: 3,
-    //   text: "Cook",
-    //   isCompleted: true,
-    // },
-    // {
-    //   id: 4,
-    //   text: "Go to the market",
-    //   isCompleted: true,
-    // },
-  ]);
+  const [todos, setTodos] = useState([todo]);
 
   const [todoText, setTodoText] = useState("")
+
+  function addTodo(){
+      setTodos([...todos, {
+       id: Date.now(),
+       text: todoText,
+       isCompleted: false
+     }])
+     setTodoText("")
+  }
+
+  function handleInputChange(event){
+      const value = event.target.value;
+      setTodoText(value)
+  }
+
+  function markTodoAsCompleted(todo){
+      let toBeMarkAsCompleted = todos.find(t=>t==todo)
+      toBeMarkAsCompleted.isCompleted = true
+      setTodos([...todos.filter(t=>t!=todo), toBeMarkAsCompleted])
+  }
+
+  function deleteTodo(todo){
+      let newTodoList = todos.filter(singleTodo=>singleTodo!=todo)
+      setTodos(newTodoList)
+  }
+
+  function markAsInComplete(todo){
+      let toBeMarkAsInComplete = todos.find(t=>t==todo)
+      toBeMarkAsInComplete.isCompleted = false
+      setTodos([...todos.filter(t=>t!=todo), toBeMarkAsInComplete])
+  }
 
   return (
     <div className="center">
       <div >
       <h1 className="title">Todo app</h1>
       <div>
-        <input onChange={(event)=>{
-          const value = event.target.value;
-          setTodoText(value)
-        }} type="text" value={todoText}/>
-        <button onClick={()=>{
-           setTodos([...todos, {
-            id: Date.now(),
-            text: todoText,
-            isCompleted: false
-          }])
-          setTodoText("")
-        }} type="button">Add todo</button>
+        <input onChange={handleInputChange} type="text" value={todoText}/>
+        <button onClick={addTodo} type="button">Add Todo</button>
       </div>
       <div>
         <h2>List of Todos</h2>
@@ -58,18 +60,10 @@ function App() {
               !todo.isCompleted && 
               <div key={index}>
                 <li className="todo_text">{index+1}. {todo.text}</li>
-                <button onClick={() => {
-                  let toBeMarkAsCompleted = todos.find(t=>t==todo)
-                  toBeMarkAsCompleted.isCompleted = true
-                  setTodos([...todos.filter(t=>t!=todo), toBeMarkAsCompleted])
-                  console.log(todos)
-                }} type="button">
+                <button onClick={()=>markTodoAsCompleted(todo)} type="button">
                   mark is completed
                 </button>
-                <button onClick={()=>{
-                  let newTodoList = todos.filter(singleTodo=>singleTodo!=todo)
-                  setTodos(newTodoList)
-                }} type="button">Delete</button>
+                <button onClick={()=>deleteTodo(todo)} type="button">Delete</button>
               </div>
             )
           )}
@@ -83,16 +77,10 @@ function App() {
               {todo.isCompleted ? (
                 <div>
                   <li className="todo_text">{todo.text}</li>
-                  <button onClick={() =>{
-                    let toBeMarkAsCompleted = todos.find(t=>t==todo)
-                    toBeMarkAsCompleted.isCompleted = false
-          
-                    setTodos([...todos.filter(t=>t!=todo), toBeMarkAsCompleted])
-                    console.log(todos)
-                  }} type="button">
+                  <button onClick={()=>markAsInComplete(todo)} type="button">
                     mark is incomplete
                   </button>
-                  <button type="button">Delete</button>
+                  <button onClick={()=>deleteTodo(todo)} type="button">Delete</button>
                 </div>
               ) : (
                 <></>
