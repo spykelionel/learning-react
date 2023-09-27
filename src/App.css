@@ -1,0 +1,33 @@
+button {
+    outline: none;
+    border: none;
+    padding: 5px;
+    margin: 2px;
+    border-radius: 3px;
+    
+}
+h1 {
+    color: #1eb3b3;
+}
+button:focus {
+    outline: none;
+    border: none;
+}
+
+input {
+    border: 1px solid blue;
+    border-radius: 2px;
+    padding: 2px;
+}
+input:focus {
+    outline: none;
+}
+li{
+    list-style-type: none;
+    display: block;
+}
+
+.center {
+    display: grid;
+    place-items: center;
+}
