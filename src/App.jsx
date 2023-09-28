@@ -11,11 +11,21 @@ let todo = {
   isCompleted: false,
 };
 
+// function useCustomState(initialValue){
+//   let value = initialValue
+
+//   function setValue(updatedValue){
+//     value = updatedValue
+//     return value
+//   }
+//   return [value, setValue]
+// }
+
 function App() {
   const [todos, setTodos] = useState([todo]);
   const [todoText, setTodoText] = useState("");
   const [disableButton, setDisableButton] = useState(true);
-
+  
   useEffect(() => {
     if (todoText.length <= 0) {
       setDisableButton(true);
