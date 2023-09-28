@@ -17,6 +17,9 @@ button:focus {
     border: none;
 
 }
+button:disabled {
+    opacity: 0.5;
+}
 
 input {
     border: 1px solid gray;
@@ -50,8 +53,4 @@ p.heading {
 .sub-button {
     margin: 5px;
     cursor: pointer;
-}
-
-button:disabled {
-    opacity: 0.5;
 }

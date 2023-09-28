@@ -31,7 +31,7 @@ function App() {
       setDisableButton(true);
     } else {
       setDisableButton(false);
-    }
+    } 
   }, [todoText]);
 
   function addTodo() {
