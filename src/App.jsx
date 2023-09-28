@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./App.css";
 
 // Read on react-router
@@ -75,6 +76,7 @@ function App() {
     <div className="center">
       <div className="app">
         <h1 className="title">Todo app</h1>
+        <Link to="/users/john">Visit John</Link>
         <div>
           <input
             onKeyUp={handleInputChange}
