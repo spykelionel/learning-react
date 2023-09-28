@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 
 // Read on react-router
 // https://react-router.com
-// Managing complex states 
+// Managing complex states
 
 let todo = {
   id: Date.now(),
@@ -14,12 +14,21 @@ let todo = {
 function App() {
   const [todos, setTodos] = useState([todo]);
   const [todoText, setTodoText] = useState("");
+  const [disableButton, setDisableButton] = useState(true)
+
+  useEffect(()=>{
+    if(todoText.length <= 0){
+      setDisableButton(true)
+    } else {
+      setDisableButton(false)
+    }
+  }, [todoText])
 
   function addTodo() {
-    if(!todoText.length<=0){
+    if (!todoText.length <= 0) {
       // call setTodos here
-    } 
-  
+    }
+
     setTodos([
       ...todos,
       {
@@ -35,8 +44,8 @@ function App() {
     const value = event.target.value;
     setTodoText(value);
   }
-
-  function markTodoAsCompleted(todo) {
+  
+  function markAsCompleted(todo) {
     let toBeMarkAsCompleted = todos.find((t) => t == todo);
     toBeMarkAsCompleted.isCompleted = true;
     setTodos([...todos.filter((t) => t != todo), toBeMarkAsCompleted]);
@@ -47,62 +56,76 @@ function App() {
     setTodos(newTodoList);
   }
 
-  function markAsInComplete(todo) {
-    let toBeMarkAsInComplete = todos.find((t) => t == todo);
-    toBeMarkAsInComplete.isCompleted = false;
-    setTodos([...todos.filter((t) => t != todo), toBeMarkAsInComplete]);
-
-    // 2
-    // let newTodoList = todos.fi
+  function markAsIncomplete(todo) {
+    let toBeMarkAsIncomplete = todos.find((t) => t == todo);
+    toBeMarkAsIncomplete.isCompleted = false;
+    setTodos([...todos.filter((t) => t != todo), toBeMarkAsIncomplete]);
   }
 
   return (
     <div className="center">
-      <div>
+      <div className="app">
         <h1 className="title">Todo app</h1>
         <div>
-          {
-            todoText.length<=0 && <p style={{color:"orange"}}>Input text</p>
-          }
-          <input onChange={handleInputChange} type="text" value={todoText} />
-          <button disabled={todoText.length<=0} onClick={addTodo} type="button">
+          <input
+            placeholder="Add to list..."
+            onChange={handleInputChange}
+            type="text"
+            value={todoText}
+          />
+          <button
+            type="button"
+            disabled={disableButton}
+            onClick={addTodo}
+          >
             Add Todo
           </button>
+          {todoText.length <= 0 && (
+            <p style={{ color: "orange", margin: 0, padding: 0 }}>Input text</p>
+          )}
         </div>
-        <div>
-          <h2>List of Todos</h2>
+        <div className="todo-area">
+          <p className="heading">List of Todos</p>
+          {todos.length<= 0 && (
+            <p style={{ color: "orange", margin: 0, padding: 0 }}>
+              Nothing to do
+            </p>
+          )}
           <ul>
             {todos.map(
               (todo, index) =>
                 !todo.isCompleted && (
-                  <div key={index}>
-                    <li className="todo_text">
+                  <div key={index} className="single-todo">
+                    <li className="todo-text">
                       {index + 1}. {todo.text}
+                      <span
+                        onClick={() => markAsCompleted(todo)}
+                        className="sub-button"
+                      >
+                        &#x2705;
+                      </span>
+                      <span
+                        onClick={() => deleteTodo(todo)}
+                        className="sub-button"
+                      >
+                        &#x274c;
+                      </span>
                     </li>
-                    <button
-                      onClick={() => markTodoAsCompleted(todo)}
-                      type="button"
-                    >
-                      mark as completed
-                    </button>
-                    <button onClick={() => deleteTodo(todo)} type="button">
-                      Delete
-                    </button>
                   </div>
                 )
             )}
           </ul>
         </div>
-        <div>
-          <h2>List of Completed Todos</h2>
+        <div className="todo-area">
+          <p className="heading">List of Completed Todos</p>
           <ul>
             {todos.map((todo, index) => (
-              <div key={index}>
+              <div key={index} className="todo-item">
                 {todo.isCompleted ? (
                   <div>
-                    <li className="todo_text">{todo.text}</li>
+                    <li className="todo-text">{todo.text}</li>
                     <button
-                      onClick={() => markAsInComplete(todo)}
+                      onClick={() => markAsIncomplete(todo)}
                       type="button"
                     >
                       mark as incomplete
