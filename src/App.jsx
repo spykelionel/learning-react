@@ -14,21 +14,17 @@ let todo = {
 function App() {
   const [todos, setTodos] = useState([todo]);
   const [todoText, setTodoText] = useState("");
-  const [disableButton, setDisableButton] = useState(true)
+  const [disableButton, setDisableButton] = useState(true);
 
-  useEffect(()=>{
-    if(todoText.length <= 0){
-      setDisableButton(true)
+  useEffect(() => {
+    if (todoText.length <= 0) {
+      setDisableButton(true);
     } else {
-      setDisableButton(false)
+      setDisableButton(false);
     }
-  }, [todoText])
+  }, [todoText]);
 
   function addTodo() {
-    if (!todoText.length <= 0) {
-      // call setTodos here
-    }
-
     setTodos([
       ...todos,
       {
@@ -43,8 +39,11 @@ function App() {
   function handleInputChange(event) {
     const value = event.target.value;
     setTodoText(value);
+    if (event.key == "Enter") {
+      addTodo();
+    }
   }
-  
+
   function markAsCompleted(todo) {
     let toBeMarkAsCompleted = todos.find((t) => t == todo);
     toBeMarkAsCompleted.isCompleted = true;
@@ -68,16 +67,13 @@ function App() {
         <h1 className="title">Todo app</h1>
         <div>
           <input
+            onKeyUp={handleInputChange}
             placeholder="Add to list..."
             onChange={handleInputChange}
             type="text"
             value={todoText}
           />
-          <button
-            type="button"
-            disabled={disableButton}
-            onClick={addTodo}
-          >
+          <button type="button" disabled={disableButton} onClick={addTodo}>
             Add Todo
           </button>
           {todoText.length <= 0 && (
@@ -86,7 +82,7 @@ function App() {
         </div>
         <div className="todo-area">
           <p className="heading">List of Todos</p>
-          {todos.length<= 0 && (
+          {todos.length <= 0 && (
             <p style={{ color: "orange", margin: 0, padding: 0 }}>
               Nothing to do
             </p>
