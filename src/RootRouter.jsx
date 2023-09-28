@@ -7,12 +7,13 @@ import {
   useParams,
 } from "react-router-dom";
 import App from "./App";
+import { useSelector } from "react-redux";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: <h1>Page not Found</h1>
+    errorElement: <h1>Page not Found</h1>,
   },
   {
     path: "users", // /about
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
       {
         path: ":username",
         element: <User />,
-        errorElement: <PageNotFound />
+        errorElement: <PageNotFound />,
       },
       {
         path: "second",
@@ -55,17 +56,15 @@ function fetchUser(username) {
     },
   ];
 
-  const user = users.find((u) => u.name.toLocaleLowerCase() === username.toLocaleLowerCase());
+  const user = users.find(
+    (u) => u.name.toLocaleLowerCase() === username.toLocaleLowerCase()
+  );
   return user;
 }
 
-function PageNotFound(){
-    const { username } = useParams();
-    return (
-        <div>
-            {username} not found
-        </div>
-    )
+function PageNotFound() {
+  const { username } = useParams();
+  return <div>{username} not found</div>;
 }
 
 function User() {
@@ -82,8 +81,12 @@ function User() {
 }
 
 function Contact() {
+  const todos = useSelector((state) => state.todos);
   return (
     <div style={{ textAlign: "center" }}>
+      {todos.map((todo) => (
+        <p key={todo.text}>{todo.text}</p>
+      ))}
       <h1>Contact</h1>
     </div>
   );
