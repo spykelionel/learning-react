@@ -9,7 +9,7 @@ import "./App.css";
 let todo = {
   id: Date.now(),
   text: "Take a bath1",
-  isCompleted: false,
+  isComplete: false,
 };
 
 // function useCustomState(initialValue){
@@ -22,28 +22,46 @@ let todo = {
 //   return [value, setValue]
 // }
 
+const BASE_URL = "http://localhost:8000/todos";
+
 function App() {
   const [todos, setTodos] = useState([todo]);
   const [todoText, setTodoText] = useState("");
   const [disableButton, setDisableButton] = useState(true);
-  
+
   useEffect(() => {
     if (todoText.length <= 0) {
       setDisableButton(true);
     } else {
       setDisableButton(false);
-    } 
+    }
   }, [todoText]);
 
+  useEffect(() => {
+    fetch(BASE_URL)
+      .then((result1) => result1.json())
+      .then((jsonResult1) => {
+        console.log(jsonResult1);
+        setTodos(jsonResult1.todos);
+
+        // {todos: []}
+      });
+  }, []);
+
   function addTodo() {
-    setTodos([
-      ...todos,
-      {
-        id: Date.now(),
-        text: todoText,
-        isCompleted: false,
+    const body = JSON.stringify({ text: todoText });
+    fetch(`${BASE_URL}/create`, {
+      body: body,
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
       },
-    ]);
+    })
+      .then((result1) => result1.json())
+      .then((jsonResult1) => {
+        setTodos([...todos, jsonResult1.todo]);
+      });
+
     setTodoText("");
   }
 
@@ -56,20 +74,52 @@ function App() {
   }
 
   function markAsCompleted(todo) {
-    let toBeMarkAsCompleted = todos.find((t) => t == todo);
-    toBeMarkAsCompleted.isCompleted = true;
-    setTodos([...todos.filter((t) => t != todo), toBeMarkAsCompleted]);
+    const body = JSON.stringify({ isComplete: true });
+    fetch(`${BASE_URL}/update/${todo._id}`, {
+      body: body,
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((result1) => result1.json())
+      .then((jsonResult1) => {
+        let toBeMarkAsCompleted = todos.find((t) => t == todo);
+        toBeMarkAsCompleted.isComplete = true;
+        setTodos([...todos.filter((t) => t != todo), toBeMarkAsCompleted]);
+      });
   }
 
   function deleteTodo(todo) {
-    let newTodoList = todos.filter((singleTodo) => singleTodo != todo);
-    setTodos(newTodoList);
+    fetch(`${BASE_URL}/delete/${todo._id}`, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resul1) => resul1.json())
+      .then((jsonResult1) => {
+        let newTodoList = todos.filter((singleTodo) => singleTodo != todo);
+        setTodos(newTodoList);
+      });
   }
 
   function markAsIncomplete(todo) {
-    let toBeMarkAsIncomplete = todos.find((t) => t == todo);
-    toBeMarkAsIncomplete.isCompleted = false;
-    setTodos([...todos.filter((t) => t != todo), toBeMarkAsIncomplete]);
+    const body = JSON.stringify({ isComplete: false });
+    fetch(`${BASE_URL}/update/${todo._id}`, {
+      body: body,
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((result1) => result1.json())
+      .then((jsonResult1) => {
+        let toBeMarkAsIncomplete = todos.find((t) => t == todo);
+        toBeMarkAsIncomplete.isComplete = false;
+        setTodos([...todos.filter((t) => t != todo), toBeMarkAsIncomplete]);
+        // refresh page.
+      });
   }
 
   return (
@@ -102,7 +152,7 @@ function App() {
           <ul>
             {todos.map(
               (todo, index) =>
-                !todo.isCompleted && (
+                !todo.isComplete && (
                   <div key={index} className="single-todo">
                     <li className="todo-text">
                       {index + 1}. {todo.text}
@@ -129,7 +179,7 @@ function App() {
           <ul>
             {todos.map((todo, index) => (
               <div key={index} className="todo-item">
-                {todo.isCompleted ? (
+                {todo.isComplete ? (
                   <div>
                     <li className="todo-text">{todo.text}</li>
                     <button
