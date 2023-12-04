@@ -1,118 +1,156 @@
-import React, { useState, useEffect, memo } from "react";
-import styles from "./App.module.css";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "./App.css";
 
-/*
-* Exercises
-* 1. Write a Hello component that 
-renders the text "Hello your_name"
- - Every React componenet returns
- a component, which might be plane
- HTML or JSX.
+// Read on react-router
+// https://react-router.com
+// Managing complex states
 
-* 2. Instead of using a static name
-value for the name prop, use a
-controled value instead. 
-Hint: Use a state.
+let todo = {
+  id: Date.now(),
+  text: "Take a bath1",
+  isCompleted: false,
+};
 
-* 3. Create a button that handles
-a click event. This button should 
-console.log(myName).
+// function useCustomState(initialValue){
+//   let value = initialValue
 
-1.
-<button onClick={()=>{
-console.log(myName)
-}}>Print my name</button>
-
-2.
-<button onClick={function(){
-console.log(myName)
-}}>Print my name</button>
-
-- react,
-DOM, virtual DOM, 
-component,
-props, 
-states, 
-events,
-handling inputs,
-Effects,
-List rendering,
-conditional rendering,
- - useMemo, useCallback
- - memo
-*/
-
-// function Hello({ name }) {
-//   return <h1>Hello {name}</h1>;
+//   function setValue(updatedValue){
+//     value = updatedValue
+//     return value
+//   }
+//   return [value, setValue]
 // }
 
-const Header = ({ children }) => {
-  // const children = props.children
-  // const {children} = props
-  let childrenCopy = children
-  // console.log(Object.is(children, childrenCopy))
-  return (
-    <header onClick={()=>{
-      console.log("YOu clicked the header")
-    }} className={styles.header}>
-      <p>Header</p>
-      {children}
-    </header>
-  );
-};
-
-const Body = () => {
-  const [name, setName] = useState("Name");
-  const [person, setPerson] = useState({
-    age: 29,
-    name: "",
-    color: "",
-    height: "",
-    gender: "",
-  });
-
-  // useEffect(()=>{
-  //   console.log(name)
-
-  // })
-  // // useEffect(()=>{
-  // //   console.log(name)
-  // // }, [name])
-  // // useEffect(()=>{}, [])
-  return (
-    <section className={styles.section}>
-      <h1>Events </h1>
-      <input
-        onChange={(event) => {
-        //  const value = event.target.value
-        const {value} = event.target
-          setName(event.target.value);
-        }}
-        type="text"
-        value={name}
-      />
-    </section>
-  );
-};
-
-const Footer = () => {
-  return (
-    <footer className={styles.footer}>
-      <p>Footer</p>
-    </footer>
-  );
-};
-
 function App() {
-  const [myName, setMyName] = useState("Initial name");
+  const [todos, setTodos] = useState([todo]);
+  const [todoText, setTodoText] = useState("");
+  const [disableButton, setDisableButton] = useState(true);
+  
+  useEffect(() => {
+    if (todoText.length <= 0) {
+      setDisableButton(true);
+    } else {
+      setDisableButton(false);
+    } 
+  }, [todoText]);
+
+  function addTodo() {
+    setTodos([
+      ...todos,
+      {
+        id: Date.now(),
+        text: todoText,
+        isCompleted: false,
+      },
+    ]);
+    setTodoText("");
+  }
+
+  function handleInputChange(event) {
+    const value = event.target.value;
+    setTodoText(value);
+    if (event.key == "Enter") {
+      addTodo();
+    }
+  }
+
+  function markAsCompleted(todo) {
+    let toBeMarkAsCompleted = todos.find((t) => t == todo);
+    toBeMarkAsCompleted.isCompleted = true;
+    setTodos([...todos.filter((t) => t != todo), toBeMarkAsCompleted]);
+  }
+
+  function deleteTodo(todo) {
+    let newTodoList = todos.filter((singleTodo) => singleTodo != todo);
+    setTodos(newTodoList);
+  }
+
+  function markAsIncomplete(todo) {
+    let toBeMarkAsIncomplete = todos.find((t) => t == todo);
+    toBeMarkAsIncomplete.isCompleted = false;
+    setTodos([...todos.filter((t) => t != todo), toBeMarkAsIncomplete]);
+  }
+
   return (
-    <>
-      <Header>
-        <>This is the header</>
-      </Header>
-      <Body />
-      <Footer />
-    </>
+    <div className="center">
+      <div className="app">
+        <h1 className="title">Todo app</h1>
+        <Link to="/users/john">Visit John</Link>
+        <div>
+          <input
+            onKeyUp={handleInputChange}
+            placeholder="Add to list..."
+            onChange={handleInputChange}
+            type="text"
+            value={todoText}
+          />
+          <button type="button" disabled={disableButton} onClick={addTodo}>
+            Add Todo
+          </button>
+          {todoText.length <= 0 && (
+            <p style={{ color: "orange", margin: 0, padding: 0 }}>Input text</p>
+          )}
+        </div>
+        <div className="todo-area">
+          <p className="heading">List of Todos</p>
+          {todos.length <= 0 && (
+            <p style={{ color: "orange", margin: 0, padding: 0 }}>
+              Nothing to do
+            </p>
+          )}
+          <ul>
+            {todos.map(
+              (todo, index) =>
+                !todo.isCompleted && (
+                  <div key={index} className="single-todo">
+                    <li className="todo-text">
+                      {index + 1}. {todo.text}
+                      <span
+                        onClick={() => markAsCompleted(todo)}
+                        className="sub-button"
+                      >
+                        &#x2705;
+                      </span>
+                      <span
+                        onClick={() => deleteTodo(todo)}
+                        className="sub-button"
+                      >
+                        &#x274c;
+                      </span>
+                    </li>
+                  </div>
+                )
+            )}
+          </ul>
+        </div>
+        <div className="todo-area">
+          <p className="heading">List of Completed Todos</p>
+          <ul>
+            {todos.map((todo, index) => (
+              <div key={index} className="todo-item">
+                {todo.isCompleted ? (
+                  <div>
+                    <li className="todo-text">{todo.text}</li>
+                    <button
+                      onClick={() => markAsIncomplete(todo)}
+                      type="button"
+                    >
+                      mark as incomplete
+                    </button>
+                    <button onClick={() => deleteTodo(todo)} type="button">
+                      Delete
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }
 
